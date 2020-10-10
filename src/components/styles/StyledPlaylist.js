@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const StyledPlaylist = styled.div`
   -webkit-box-flex: 1;
