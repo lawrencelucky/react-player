@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ThemeProvider } from 'styled-components';
 import Video from '../Video';
 import Playlist from '../containers/Playlist';
@@ -24,13 +24,67 @@ const themeLight = {
   color: '#353535',
 };
 
-const WbnPlayer = props => {
+const WbnPlayer = ({ match, history, location }) => {
+  const videos = JSON.parse(document.querySelector('[name="videos"]').value);
+
+  const [state, setState] = useState({
+    videos: videos.playlist,
+    activeVideo: videos.playlist[0],
+    nightMode: true,
+    playlistId: videos.playlistId,
+    autoplay: false,
+  });
+
+  useEffect(() => {
+    const videoId = match.params.activeVideo;
+    if (videoId !== undefined) {
+      const newActiveVideo = state.videos.findIndex(
+        video => video.id === videoId
+      );
+      setState(prev => ({
+        ...prev,
+        activeVideo: prev.videos[newActiveVideo],
+        autoplay: location.autoplay,
+      }));
+    } else {
+      history.push({
+        pathname: `/${state.activeVideo.id}`,
+        autoplay: false,
+      });
+    }
+  }, [
+    history,
+    location.autoplay,
+    match.params.activeVideo,
+    state.activeVideo.id,
+    state.videos,
+  ]);
+
+  const nightModeCallback = () => {};
+
+  const endCallback = () => {};
+
+  const progressCallback = () => {};
+
   return (
     <ThemeProvider theme={state.nightMode ? theme : themeLight}>
-      <StyledWbnPlayer>
-        <Video />
-        <Playlist />
-      </StyledWbnPlayer>
+      {state.videos !== null ? (
+        <StyledWbnPlayer>
+          <Video
+            active={state.activeVideo}
+            autoplay={state.autoplay}
+            endCallback={endCallback}
+            progressCallback={progressCallback}
+          />
+
+          <Playlist
+            videos={state.videos}
+            active={state.activeVideo}
+            nightModeCallback={nightModeCallback}
+            nightMode={state.nightMode}
+          />
+        </StyledWbnPlayer>
+      ) : null}
     </ThemeProvider>
   );
 };

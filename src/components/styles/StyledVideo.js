@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const StyledVideo = styled.div`
   position: relative;
@@ -6,7 +6,7 @@ const StyledVideo = styled.div`
   -ms-flex: 2 0 900px;
   flex: 2 0 900px;
 
-  @media screen and (max-width: 1400px) {
+  @media screen and (max-width: 800px) {
     width: 100%;
     display: block;
   }
